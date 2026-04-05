@@ -4,8 +4,7 @@ import numpy as np
 import pickle
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
-
-model = SentenceTransformer("all-MiniLM-L6-v2")
+from src.rag.retriever import get_model
 
 
 def build_index(all_data: list[dict], save_dir: str) -> tuple[faiss.Index, list[str]]:
@@ -15,7 +14,7 @@ def build_index(all_data: list[dict], save_dir: str) -> tuple[faiss.Index, list[
 
     print(f"Total chunks: {len(chunks)}")
 
-    embeddings = model.encode(chunks, show_progress_bar=True)
+    embeddings = get_model().encode(chunks, show_progress_bar=True)
     embeddings = np.array(embeddings).astype("float32")
 
     index = faiss.IndexFlatL2(embeddings.shape[1])

@@ -2,11 +2,17 @@ import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+_model = None
+
+def get_model():
+    global _model
+    if _model is None:
+        _model = SentenceTransformer("all-MiniLM-L6-v2")
+    return _model
 
 
 def retrieve(query: str, index: faiss.Index, chunks: list[str], top_k: int = 5) -> list[str]:
-    embedding = model.encode([query]).astype("float32")
+    embedding = get_model().encode([query]).astype("float32")
     _, indices = index.search(embedding, top_k)
     return [chunks[i] for i in indices[0] if i < len(chunks)]
 
@@ -23,6 +29,5 @@ if __name__ == "__main__":
 
     for q in queries:
         print(f"\nQ: {q}")
-        results = retrieve(q, index, chunks)
-        for r in results:
+        for r in retrieve(q, index, chunks):
             print(f"  - {r}")
