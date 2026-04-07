@@ -6,6 +6,7 @@ from src.rag.retriever import retrieve
 from src.llm.explainer import explain, forecast
 from pathlib import Path
 
+
 st.set_page_config(page_title="PitWall", page_icon="🏎️", layout="wide")
 
 st.markdown("""
